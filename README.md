@@ -1,7 +1,9 @@
 # AZ-204 Lab – Flight Booking API
-App Service deployment
 
-This repository contains a **simple ASP.NET Core Web API** built as part of an **AZ‑204 (Developing Solutions for Microsoft Azure)** hands‑on lab.
+Overview
+
+This repository contains a Flight Booking Web API built with ASP.NET Core (Minimal APIs) as part of an AZ‑204 (Developing Solutions for Microsoft Azure) hands‑on lab.
+The project focuses on API design, cloud‑native development, and DevOps fundamentals, progressing from local development to automated CI using GitHub Actions, and preparing the application for Azure App Service deployment.
 
 The project demonstrates:
 - Building a Minimal API using ASP.NET Core
@@ -12,9 +14,11 @@ The project demonstrates:
 
 ---
 
-## 🧱 Project Overview
+## 🧱  Application Overview
 
-The application is a **Flight Booking API** that allows:
+The application is a **Flight Booking API** that supports the following functionality:
+
+Core Features
 
 - Health check validation
 - Retrieving available flights
@@ -23,13 +27,20 @@ The application is a **Flight Booking API** that allows:
 - Retrieving a booking by ID with 404 handling
 - Searching bookings by passenger email
 
-The API uses **in‑memory storage** (no database yet) to keep the focus on API design and deployment concepts relevant to AZ‑204.
+Design Notes
+
+- The application uses in‑memory storage (no database yet) to keep the focus on:
+- API behavior
+- Request/response handling
+- Validation and error handling
+- Cloud deployment readiness
+- This approach aligns with the learning objectives of AZ‑204, before introducing persistence services such as Azure SQL or Cosmos DB.
 
 ---
 
 ## 🧩 Implementation details
 
-1. Setup
+1. Project Setup
    - Created new ASP.NET Core Minimal API project in `FlightBooking.Api`.
    - Added project references and kept dependency footprint small to match AZ-204 lab scope.
    - Enabled Swagger via `builder.Services.AddEndpointsApiExplorer()` and `builder.Services.AddSwaggerGen()`.
@@ -53,18 +64,51 @@ The API uses **in‑memory storage** (no database yet) to keep the focus on API 
        - available seats check (`400` if not enough),
        - seat count deduction and booking creation; returns `201 Created` with location.
 
-4. Testing and validation
-   - Verified endpoints via Swagger UI running on local development server.
-   - Confirmed flow of available-seat decrement on successful booking and proper error handling.
+ ## 🧪 Testing & Validation
+
+   - Verified all endpoints via Swagger UI
+     Confirmed:
+   - Seat availability decreases correctly after booking
+   - Proper HTTP status codes for validation and error scenarios
+   - Clean request/response behavior
+
 
 ---
 
+## 🚀 DevOps & Automation
+
+1. Continuous Integration (CI)
+
+   - Implemented GitHub Actions for CI
+   - Workflow is located at: 
+   github/workflows/deploy.yml
+
+2. CI pipeline performs:
+
+   - Source checkout
+   - .NET 8 setup
+   - Dependency restore
+   - Release build validation
+   - Triggered automatically on every push to the main branch
+   - ** This ensures the application always builds successfully before deployment **
+
+3. Containerization (Optional Path)
+
+   - Added a multi‑stage Dockerfile:
+   - Build stage using mcr.microsoft.com/dotnet/sdk:8.0
+   - Runtime stage using mcr.microsoft.com/dotnet/aspnet:8.0
+   - Application runs on port 8080, aligned with cloud‑native defaults
+   - Container builds and runs successfully locally and in Codespaces
+
 ## 🛠️ Tech Stack
 
-- **.NET (ASP.NET Core Minimal APIs)**
+- .NET 8 / ASP.NET Core (Minimal APIs)
 - **Swagger / OpenAPI** via Swashbuckle
-- **GitHub Codespaces** (cloud‑based development environment)
-- **C#**
+- GitHub Codespaces (cloud‑based development environment)
+- C#
+- GitHub Actions (CI)
+- Docker
+
 
 ---
 
@@ -86,3 +130,14 @@ FlightBooking.Api/
 ├── Program.cs
 ├── FlightBooking.Api.csproj
 └── README.md
+
+
+-----
+
+## 🔜 Next Steps
+
+ - The next phase of this lab will focus on deployment and cloud integration, including:
+ - Deploying the API to Azure App Service (Linux, .NET 8)
+ - Authenticating GitHub Actions to Azure using OpenID Connect (OIDC)
+ - Automating Continuous Deployment (CD)
+ - (Optional) Introducing Azure‑managed data services
