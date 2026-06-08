@@ -47,3 +47,4 @@ USER appuser
 
 # Start application
 ENTRYPOINT ["dotnet", "FlightBooking.Api.dll"]
+CMD ["--some-default-argument"]
