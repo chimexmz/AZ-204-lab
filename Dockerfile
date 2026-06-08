@@ -50,8 +50,10 @@ WORKDIR /app
 # Install wget for health checks
 RUN apk add --no-cache wget
 
-# Create non-root user and group
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+# Create non-root group and user, set permissions
+RUN addgroup -S helpdesk && \
+    adduser -S Chimexmr -G helpdesk -h /app && \
+    chown -R Chimexmr:helpdesk /app
 
 # Copy published application
 COPY --from=build /app/publish .
@@ -70,7 +72,7 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
     CMD wget --no-verbose --tries=1 --spider http://localhost:8080/health || exit 1
 
 # Switch to non-root user
-USER appuser
+USER Chimexmr
 
 # Start application
 ENTRYPOINT ["dotnet", "FlightBooking.Api.dll"]
